@@ -1,0 +1,414 @@
+import React, { useMemo, useState } from 'react';
+import wolfLogo from './alpha.jpeg';
+import { RefreshCw, Sparkles, Copy, Check } from 'lucide-react';
+
+const punchlines = [
+  'J’avance en silence, mais ça fait du bruit.',
+  'Je build pendant que tu refresh.',
+  'Moins de promesses, plus de preuves.',
+  'Je suis passé en mode avion, mais je monte.',
+  'Je fais du réel pendant que tu fais du contenu.',
+  'Je suis discret mais pas absent.',
+  'Je préfère être solide que populaire.',
+  'J’ai supprimé les excuses, ça a tout changé.',
+  'Je ne rush pas, je vise juste.',
+  'Je suis focus, pas occupé.',
+  'Je ne bluffe pas, je prouve.',
+  'Je travaille même quand personne ne regarde.',
+  'J’ai remplacé le doute par du taf.',
+  'Je ne cherche plus, je crée.',
+  'J’ai quitté le bruit pour la clarté.',
+  'Je suis lent mais inarrêtable.',
+  'Je ne perds pas de temps à convaincre.',
+  'Je fais ce que beaucoup reportent.',
+  'Je suis devenu mon meilleur investissement.',
+  'Je parle peu, mais chaque mot compte.',
+  'Je ne suis pas pressé, mais je ne m’arrête pas.',
+  'Je choisis mes batailles, pas mon ego.',
+  'Je joue long terme pendant que tu joues court.',
+  'Je préfère construire que comparer.',
+  'Je ne cours plus, je trace.',
+  'Je suis là pour durer, pas pour buzzer.',
+  'Je ne cherche pas l’attention, je crée de la valeur.',
+  'Je fais simple, mais ça frappe.',
+  'J’ai changé de trajectoire, pas de vision.',
+  'Je coupe le superflu sans regret.',
+  'Je suis discipliné, pas spécial.',
+  'Je suis calme parce que je sais.',
+  'Je ne fais pas semblant, je fais.',
+  'Je préfère l’effort au discours.',
+  'Je transforme mes idées en actions.',
+  'Je ne copie pas, j’adapte.',
+  'Je reste carré même quand c’est flou.',
+  'Je vise la maîtrise, pas l’apparence.',
+  'Je construis une version qui ne dépend de personne.',
+  'Je ne suis pas là pour plaire.',
+  'Je suis là pour avancer.',
+  'Je garde la tête froide et les objectifs chauds.',
+  'Je ne ralentis pas pour rassurer.',
+  'Je préfère être respecté que validé.',
+  'Je ne suis pas une tendance.',
+  'Je suis une direction.',
+  'Je fais le travail que d’autres évitent.',
+  'Je transforme le temps en levier.',
+  'Je reste stable pendant que ça bouge.',
+  'Je fais du silence une arme.',
+  'Je ne joue pas un rôle.',
+  'Je prends ma place.',
+  'Je n’attends pas le bon moment.',
+  'Je le crée.',
+  'Je préfère être sous-estimé.',
+  'Je livre plus que je ne montre.',
+  'Je suis cohérent même quand c’est dur.',
+  'Je fais passer le long terme avant l’ego.',
+  'Je ne suis pas parfait, mais constant.',
+  'Je fais des choix, pas des excuses.',
+  'Je garde ce qui m’élève.',
+  'Je laisse le reste derrière.',
+  'Je ne cherche pas à impressionner.',
+  'Je cherche à progresser.',
+  'Je transforme l’effort en habitude.',
+  'Je suis plus précis que rapide.',
+  'Je préfère être efficace que visible.',
+  'Je ne me compare plus.',
+  'Je construis ma version.',
+  'Je suis aligné avec ce que je fais.',
+  'Je n’attends pas d’opportunité.',
+  'Je la fabrique.',
+  'Je ne me disperse plus.',
+  'Je concentre.',
+  'Je fais ce qui compte vraiment.',
+  'Je reste stable même quand ça secoue.',
+  'Je fais moins de bruit, plus de résultats.',
+  'Je ne cherche pas le facile.',
+  'Je cherche le solide.',
+  'Je prends le temps de bien faire.',
+  'Je termine ce que je commence.',
+  'Je suis patient mais déterminé.',
+  'Je ne joue pas petit.',
+  'Je pense grand et j’agis simple.',
+  'Je garde la vision même quand c’est flou.',
+  'Je fais ce que je peux aujourd’hui.',
+  'Je fais mieux demain.',
+  'Je ne suis pas en retard.',
+  'Je suis en construction.',
+  'Je préfère avancer lentement que stagner.',
+  'Je fais du concret, pas des promesses.',
+  'Je reste fidèle à mon plan.',
+  'Je ne lâche pas sous pression.',
+  'Je m’adapte sans me perdre.',
+  'Je garde le cap.',
+  'Je fais le tri, sans hésiter.',
+
+  // nouvelles punchlines variées
+  'Je suis offline mais mes résultats parlent.',
+  'Je fais ce que je dis, même quand c’est chiant.',
+  'Je ne perds plus d’énergie inutile.',
+  'Je suis simple mais dangereux.',
+  'Je ne cherche pas la lumière, je crée de l’ombre.',
+  'Je suis régulier, pas spectaculaire.',
+  'Je préfère durer que briller.',
+  'Je ne suis pas pressé, je suis précis.',
+  'Je suis là pour construire, pas pour tester.',
+  'Je ne fais pas semblant d’être occupé.',
+  'Je produis pendant que tu procrastines.',
+  'Je suis calme mais focus.',
+  'Je prends moins de décisions, mais meilleures.',
+  'Je suis devenu difficile à distraire.',
+  'Je fais le job, même sans motivation.',
+  'Je n’attends plus la validation.',
+  'Je suis constant, c’est ça la diff.',
+  'Je ne cherche pas à convaincre, juste à avancer.',
+  'Je fais plus que je ne montre.',
+  'Je suis en train de devenir solide.',
+  'Je préfère l’effort invisible.',
+  'Je ne me raconte plus d’histoires.',
+  'Je suis focus sur le process.',
+  'Je suis meilleur qu’hier, ça suffit.',
+  'Je fais du bruit avec mes résultats.',
+  'Je suis stable dans le chaos.',
+  'Je ne suis pas en compétition.',
+  'Je suis en progression.',
+  'Je ne cherche plus la facilité.',
+  'Je suis discipliné même quand j’ai la flemme.',
+  'Je suis devenu mon propre standard.',
+  'Je ne parle plus de mes plans.',
+  'Je les exécute.',
+  'Je fais ce que les autres évitent.',
+  'Je suis focus sur l’essentiel.',
+  'Je coupe ce qui ralentit.',
+  'Je garde ce qui construit.',
+  'Je suis carré dans mes actions.',
+  'Je ne fais pas semblant de travailler.',
+  'Je suis dans le concret.',
+  'Je ne cherche pas à être compris.',
+  'Je cherche à avancer.',
+  'Je suis devenu efficace.',
+  'Je ne perds plus de temps.',
+  'Je sais ce que je veux.',
+  'Je fais ce qu’il faut.',
+  'Je suis constant dans l’effort.',
+  'Je ne lâche pas facilement.',
+  'Je suis en train de construire quelque chose.',
+  'Je ne fais pas de bruit inutile.',
+  'Je reste focus.',
+  'Je suis plus fort qu’avant.',
+  'Je continue malgré tout.',
+  'Je fais ce qui compte.',
+  'Je ne me disperse plus.',
+  'Je suis en train de monter.',
+  'Je garde la direction.',
+  'Je suis prêt pour la suite.',
+  'Je fais le travail nécessaire.',
+  'Je ne saute pas d’étapes.',
+  'Je construis étape par étape.',
+  'Je reste discipliné.',
+  'Je suis en train d’évoluer.',
+  'Je fais ce que peu font.',
+  'Je ne m’arrête pas maintenant.',
+  'Je suis déjà lancé.',
+  'Je garde le rythme.',
+  'Je suis concentré.',
+  'Je fais avancer les choses.',
+  'Je reste déterminé.',
+  'Je suis dans l’action.',
+  'Je ne recule plus.',
+  'Je continue d’avancer.',
+  'Je garde la vision.',
+  'Je suis en progression constante.',
+  'Je fais ce que je dois faire.',
+  'Je suis engagé.',
+  'Je ne lâche rien.',
+  'Je suis prêt à aller plus loin.',
+  'Je reste solide.',
+  'Je construis quelque chose de réel.',
+  'Je suis dans le vrai.',
+  'Je ne triche pas.',
+  'Je fais les choses correctement.',
+  'Je suis en train de réussir.',
+  'Je continue le chemin.',
+  'Je suis déterminé à avancer.',
+  'Je reste focus sur mes objectifs.',
+  'Je fais le nécessaire.',
+  'Je suis en train de gagner du terrain.',
+  'Je ne regarde plus derrière.',
+  'Je suis en train de progresser.',
+  'Je garde le cap, quoi qu’il arrive.'
+];
+
+const tones = {
+  motivant: ['ambitieux', 'confiant', 'propre'],
+  drole: ['piquant', 'léger', 'réseaux'],
+  sombre: ['froid', 'calme', 'intense'],
+  luxe: ['premium', 'rare', 'maîtrisé'],
+  reseaux: ['court', 'impactant', 'viral']
+};
+
+const usages = {
+  instagram: ['court', 'stylé', 'caption'],
+  tiktok: ['direct', 'efficace', 'rapide'],
+  bio: ['très court', 'net', 'mémorable'],
+  story: ['phrase forte', 'visuelle', 'simple'],
+  rap: ['attitude', 'tranchant', 'rythmé'],
+  autre: ['adaptable', 'flexible', 'simple']
+};
+
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+function pickTen(context, refreshIndex) {
+  const seedBase = hashString(`${context.theme}|${context.tone}|${context.usage}|${context.energy}|${context.length}|${refreshIndex}`);
+  const scored = punchlines.map((line, index) => {
+    let score = hashString(`${seedBase}-${line}-${index}`) % 1000;
+
+    const lineLower = line.toLowerCase();
+    const toneKeywords = tones[context.tone] || [];
+    const usageKeywords = usages[context.usage] || [];
+
+    toneKeywords.forEach((word, i) => {
+      if (lineLower.includes(word)) score += 120 - i * 10;
+    });
+
+    usageKeywords.forEach((word, i) => {
+      if (lineLower.includes(word)) score += 100 - i * 10;
+    });
+
+    if (context.energy === 'forte' && /(toujours|gagne|avance|focus|discipline|puissance)/i.test(line)) score += 120;
+    if (context.energy === 'moyenne' && /(calme|simple|propre|réel|aligné)/i.test(line)) score += 120;
+    if (context.energy === 'douce' && /(paix|calme|silence|rare|énergie)/i.test(line)) score += 120;
+
+    if (context.length === 'court' && line.length < 35) score += 140;
+    if (context.length === 'moyen' && line.length >= 35 && line.length <= 65) score += 140;
+    if (context.length === 'libre') score += 60;
+
+    if (context.theme && lineLower.includes(context.theme.toLowerCase())) score += 150;
+
+    return { line, score };
+  });
+
+  return scored
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10)
+    .map((item) => item.line);
+}
+
+export default function PunchlinesGeneratorSite() {
+  const [context, setContext] = useState({
+    theme: '',
+    usage: 'instagram',
+    tone: 'motivant',
+    energy: 'forte',
+    length: 'court'
+  });
+  const [refreshIndex, setRefreshIndex] = useState(0);
+  const [copiedIndex, setCopiedIndex] = useState(null);
+
+  const results = useMemo(() => pickTen(context, refreshIndex), [context, refreshIndex]);
+
+  const onChange = (key, value) => {
+    setContext((prev) => ({ ...prev, [key]: value }));
+    setRefreshIndex(0);
+  };
+
+  const copyLine = async (line, index) => {
+    try {
+      await navigator.clipboard.writeText(line);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 1500);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white text-slate-900">
+      <div className="mx-auto max-w-md px-4 py-6 sm:py-8">
+        <div className="mb-6 rounded-3xl border border-green-100 bg-white p-5 shadow-sm">
+          <div className="mb-4 flex items-center gap-3">
+            <img
+              src={wolfLogo}
+              alt="Logo loup"
+              className="h-16 w-16 rounded-2xl object-cover ring-1 ring-green-100"
+            />
+            <div className="inline-flex items-center gap-2 rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-700">
+              <Sparkles className="h-4 w-4" />
+              Générateur de punchlines
+            </div>
+          </div>
+
+          <h1 className="text-2xl font-bold tracking-tight">Trouve 10 punchlines selon ton contexte</h1>
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Choisis 5 infos simples. Le site te propose 10 punchlines adaptées. Si ça ne te plaît pas, relance.
+          </p>
+        </div>
+
+        <div className="space-y-4 rounded-3xl border border-green-100 bg-green-50/50 p-4 shadow-sm">
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Thème ou mot-clé</label>
+            <input
+              value={context.theme}
+              onChange={(e) => onChange('theme', e.target.value)}
+              placeholder="ex: réussite, attitude, solitude"
+              className="w-full rounded-2xl border border-green-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-green-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Où tu veux l’utiliser</label>
+            <select
+              value={context.usage}
+              onChange={(e) => onChange('usage', e.target.value)}
+              className="w-full rounded-2xl border border-green-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-green-500"
+            >
+              <option value="instagram">Instagram</option>
+              <option value="tiktok">TikTok</option>
+              <option value="bio">Bio</option>
+              <option value="story">Story</option>
+              <option value="rap">Rap / texte</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Style</label>
+            <select
+              value={context.tone}
+              onChange={(e) => onChange('tone', e.target.value)}
+              className="w-full rounded-2xl border border-green-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-green-500"
+            >
+              <option value="motivant">Motivant</option>
+              <option value="drole">Drôle</option>
+              <option value="sombre">Sombre</option>
+              <option value="luxe">Luxe</option>
+              <option value="reseaux">Réseaux</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Énergie</label>
+            <select
+              value={context.energy}
+              onChange={(e) => onChange('energy', e.target.value)}
+              className="w-full rounded-2xl border border-green-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-green-500"
+            >
+              <option value="forte">Forte</option>
+              <option value="moyenne">Moyenne</option>
+              <option value="douce">Douce</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-slate-700">Longueur</label>
+            <select
+              value={context.length}
+              onChange={(e) => onChange('length', e.target.value)}
+              className="w-full rounded-2xl border border-green-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-green-500"
+            >
+              <option value="court">Court</option>
+              <option value="moyen">Moyen</option>
+              <option value="libre">Libre</option>
+            </select>
+          </div>
+
+          <button
+            onClick={() => setRefreshIndex((v) => v + 1)}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-green-700 active:scale-[0.99]"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Relancer 10 propositions
+          </button>
+        </div>
+
+        <div className="mt-6 space-y-3">
+          {results.map((line, index) => (
+            <div
+              key={`${line}-${index}`}
+              className="rounded-3xl border border-green-100 bg-white p-4 shadow-sm"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-sm leading-6 text-slate-800">{index + 1}. {line}</p>
+                <button
+                  onClick={() => copyLine(line, index)}
+                  className="shrink-0 rounded-xl border border-green-200 p-2 text-green-700 transition hover:bg-green-50"
+                  aria-label={`Copier la punchline ${index + 1}`}
+                >
+                  {copiedIndex === index ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-6 text-center text-xs text-slate-500">
+          Design simple, mobile, une seule page.
+        </p>
+      </div>
+    </div>
+  );
+}
